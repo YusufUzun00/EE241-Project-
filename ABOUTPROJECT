@@ -32,4 +32,6 @@ Image Processing: Implement basic image processing on the FPGA (e.g., converting
 Remote Access: Connect the FPGA to a network to allow remote access to images via Ethernet or Wi-Fi.
 Low Power Mode: Implement a power-saving mode that only powers the camera when motion is detected.
 
+(The files named as example[EX.] are to guide us through this project)   ****
+
 
