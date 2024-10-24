@@ -4,7 +4,7 @@ You can use this home automation device for security purposes at home entrance d
 To implement your motion-triggered camera project using Verilog, we need to understand how Verilog allows us to control hardware components such as the PIR motion sensor and camera module. Since Verilog is primarily a hardware description language (HDL) used to design digital circuits, we can create logic to handle motion detection and trigger the camera module. But Verilog does not interface directly with cameras, so we will need additional hardware (such as an FPGA or MCU) to control external components so we plan to concantrate on learning ways to do that while improving ourselves at Verilog.
 
 1. Components Needed:
-FPGA Development Board: (e.g., Xilinx or Intel/Altera FPGA) to run the Verilog code.
+FPGA Development Board: (Basis-3) to run the Verilog code.
 PIR Motion Sensor: To detect movement (e.g., HC-SR501).
 Camera Module: An external camera like the OV7670 Camera Module (which can interface with an FPGA).
 SDRAM (optional): For image storage.
