@@ -23,11 +23,11 @@ The FPGA receives the signal from the motion sensor and sends a trigger to the c
 The camera module captures an image.
 Optionally, the FPGA can send the captured data to a computer via UART or store it in external memory (SDRAM).
 
-4. Testing and Simulation:
+3. Testing and Simulation:
 Simulate your Verilog code using tools like ModelSim or Vivado to ensure the FSM logic works and triggers the camera correctly.
 Test the camera interface separately by writing pixel data to memory and verifying the output.
 
-5. Optional Enhancements:
+4. Optional Enhancements:
 Image Processing: Implement basic image processing on the FPGA (e.g., converting RGB to grayscale).
 Remote Access: Connect the FPGA to a network to allow remote access to images via Ethernet or Wi-Fi.
 Low Power Mode: Implement a power-saving mode that only powers the camera when motion is detected.
