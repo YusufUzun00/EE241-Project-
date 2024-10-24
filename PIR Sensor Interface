@@ -1,0 +1,14 @@
+module pir_sensor(
+    input wire clk,        // Clock input for FPGA
+    input wire pir_input,  // PIR sensor input (from PIR sensor OUT pin)
+    output reg motion_detected // Signal that indicates motion was detected
+);
+
+    always @(posedge clk) begin
+        if (pir_input) begin
+            motion_detected <= 1; // Motion detected
+        end else begin
+            motion_detected <= 0; // No motion
+        end
+    end
+endmodule
