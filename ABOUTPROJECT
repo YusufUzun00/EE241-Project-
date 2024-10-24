@@ -17,7 +17,7 @@ In Verilog, you'll define modules for:
 Motion Detection: Interface with the PIR sensor to detect motion.
 Camera Trigger: Control the camera module to capture an image when the PIR sensor detects motion.
 Data Storage (optional): Store images to external memory or send them to a computer via a serial interface.
-The flow of your system will be:
+The flow of our system will be:
 The PIR sensor detects motion.
 The FPGA receives the signal from the motion sensor and sends a trigger to the camera module.
 The camera module captures an image.
