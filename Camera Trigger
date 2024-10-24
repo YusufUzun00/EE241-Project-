@@ -1,0 +1,40 @@
+module camera_trigger(
+    input wire clk,                   // Clock signal
+    input wire motion_detected,       // Signal from PIR sensor
+    output reg camera_trigger_signal  // Signal to trigger the camera
+);
+
+    // State machine states
+    typedef enum logic [1:0] {
+        IDLE = 2'b00,
+        TRIGGER = 2'b01,
+        WAIT = 2'b10
+    } state_t;
+
+    state_t current_state, next_state;
+
+    // State transition logic
+    always @(posedge clk) begin
+        case (current_state)
+            IDLE: begin
+                if (motion_detected) 
+                    next_state <= TRIGGER;  // Move to trigger state
+                else 
+                    next_state <= IDLE;
+            end
+            TRIGGER: begin
+                camera_trigger_signal <= 1; // Send trigger signal to camera
+                next_state <= WAIT;         // Move to wait state
+            end
+            WAIT: begin
+                camera_trigger_signal <= 0; // Clear the trigger signal
+                if (!motion_detected)
+                    next_state <= IDLE;     // Go back to idle after motion stops
+                else
+                    next_state <= WAIT;
+            end
+            default: next_state <= IDLE;
+        endcase
+        current_state <= next_state;
+    end
+endmodule
