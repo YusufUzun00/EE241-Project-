@@ -1,0 +1,37 @@
+Project Plan: Motion Sensor Triggering a Camera Using Verilog on FPGA
+As our home automation project, we will make a camera that is triggered by a motion sensor and takes a photo in order to the signal recieved.
+You can use this home automation device for security purposes at home entrance doors, to detect people entering a room or a place, or to find out who ate the snacks in your snack stash.
+To implement your motion-triggered camera project using Verilog, we need to understand how Verilog allows us to control hardware components such as the PIR motion sensor and camera module. Since Verilog is primarily a hardware description language (HDL) used to design digital circuits, we can create logic to handle motion detection and trigger the camera module. But Verilog does not interface directly with cameras, so we will need additional hardware (such as an FPGA or MCU) to control external components so we plan to concantrate on learning ways to do that while improving ourselves at Verilog.
+
+1. Components Needed:
+FPGA Development Board: (e.g., Xilinx or Intel/Altera FPGA) to run the Verilog code.
+PIR Motion Sensor: To detect movement (e.g., HC-SR501).
+Camera Module: An external camera like the OV7670 Camera Module (which can interface with an FPGA).
+SDRAM (optional): For image storage.
+UART Interface: To communicate with a PC for viewing images (optional).
+Clock Source: FPGAs usually need an external or internal clock signal.
+
+2. System Architecture:
+In Verilog, you'll define modules for:
+
+Motion Detection: Interface with the PIR sensor to detect motion.
+Camera Trigger: Control the camera module to capture an image when the PIR sensor detects motion.
+Data Storage (optional): Store images to external memory or send them to a computer via a serial interface.
+The flow of your system will be:
+The PIR sensor detects motion.
+The FPGA receives the signal from the motion sensor and sends a trigger to the camera module.
+The camera module captures an image.
+Optionally, the FPGA can send the captured data to a computer via UART or store it in external memory (SDRAM).
+
+4. Testing and Simulation:
+Simulate your Verilog code using tools like ModelSim or Vivado to ensure the FSM logic works and triggers the camera correctly.
+Test the camera interface separately by writing pixel data to memory and verifying the output.
+
+5. Optional Enhancements:
+Image Processing: Implement basic image processing on the FPGA (e.g., converting RGB to grayscale).
+Remote Access: Connect the FPGA to a network to allow remote access to images via Ethernet or Wi-Fi.
+Low Power Mode: Implement a power-saving mode that only powers the camera when motion is detected.
+
+Conclusion:
+Using Verilog for this project is a great way to explore FPGA development and hardware interfacing. While controlling the motion sensor is straightforward, interfacing with the camera and storing images involves more complexity. If you’re new to Verilog and FPGA development, focus on getting the motion detection and camera triggering working before diving into more advanced features like image storage or communication with external devices.
+
