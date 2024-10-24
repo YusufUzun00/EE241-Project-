@@ -32,6 +32,4 @@ Image Processing: Implement basic image processing on the FPGA (e.g., converting
 Remote Access: Connect the FPGA to a network to allow remote access to images via Ethernet or Wi-Fi.
 Low Power Mode: Implement a power-saving mode that only powers the camera when motion is detected.
 
-Conclusion:
-Using Verilog for this project is a great way to explore FPGA development and hardware interfacing. While controlling the motion sensor is straightforward, interfacing with the camera and storing images involves more complexity. If you’re new to Verilog and FPGA development, focus on getting the motion detection and camera triggering working before diving into more advanced features like image storage or communication with external devices.
 
