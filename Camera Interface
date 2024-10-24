@@ -1,0 +1,28 @@
+The OV7670 Camera Module is often used with FPGAs. The camera sends data in parallel, and the FPGA needs to sample that data and store it. You'll need to interface with the camera using an FSM to control the signals like PCLK, VSYNC, and HSYNC. This will be the most complex part of the project since it involves:
+
+Clocking: The camera works with a specific clock signal, often requiring 24 MHz.
+Image Capture: Reading pixel data (RGB or YUV format) and synchronizing with VSYNC and HSYNC signals.
+Here’s a  module outline for the OV7670 Camera Interface:
+
+module camera_interface(
+    input wire clk,              // Main clock (adjust to camera's PCLK)
+    input wire camera_pclk,      // Pixel clock from the camera
+    input wire camera_vsync,     // Vertical sync signal
+    input wire camera_hsync,     // Horizontal sync signal
+    input wire [7:0] camera_data,// 8-bit data from the camera
+    output reg [7:0] pixel_data  // Processed pixel data
+);
+
+    // Registers to store pixel data
+    reg [7:0] pixel_red, pixel_green, pixel_blue;
+
+    always @(posedge camera_pclk) begin
+        if (camera_vsync == 1'b0) begin
+            if (camera_hsync == 1'b0) begin
+                // Sample data when HSYNC is low (valid pixel data)
+                pixel_data <= camera_data;
+            end
+        end
+    end
+
+endmodule
