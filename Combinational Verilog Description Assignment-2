@@ -1,3 +1,7 @@
+Explanation of the Code:
+motion_detected: Input from the motion sensor. If the sensor detects motion, this signal will be high (1), otherwise low (0).
+camera_trigger: This output is used to trigger the camera. It directly mirrors the motion_detected input, acting as a simple pass-through.
+
 module MotionCameraTrigger(
     input wire motion_detected,    // Input from the motion sensor (1 = motion detected, 0 = no motion)
     output wire camera_trigger     // Output to trigger the camera (1 = trigger camera, 0 = no trigger)
@@ -9,6 +13,13 @@ module MotionCameraTrigger(
 endmodule
 
 -------------------------------------------------------------------------------------------------------------------------------------
+
+
+Explanation of the Code
+debounce Module: The debounce logic stabilizes the input signal from the motion sensor by requiring it to stay high for a set number of clock cycles before recognizing it as a valid motion detection. This is achieved through the debounce module, which we’ll define below.
+timer_counter: Counts down to control how long the camera_trigger signal stays high after motion is detected.
+timer_active: Keeps track of whether the timer is active, ensuring that each motion detection event triggers the timer only once.
+
 
 module MotionCameraSystem(
     input wire clk,                 // System clock
@@ -60,6 +71,11 @@ endmodule
 
 
 ----------------------------------------------------------------------------------------------------------------------------------
+Explanation of the Code
+debounce Module: The debounce logic stabilizes the input signal from the motion sensor by requiring it to stay high for a set number of clock cycles before recognizing it as a valid motion detection. This is achieved through the debounce module, which we’ll define below.
+timer_counter: Counts down to control how long the camera_trigger signal stays high after motion is detected.
+timer_active: Keeps track of whether the timer is active, ensuring that each motion detection event triggers the timer only once.
+
 
 module debounce #(
     parameter DEBOUNCE_CYCLES = 100000  // Adjust based on the clock frequency and sensor noise characteristics
