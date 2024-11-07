@@ -71,10 +71,8 @@ endmodule
 
 
 ----------------------------------------------------------------------------------------------------------------------------------
-Explanation of the Code
-debounce Module: The debounce logic stabilizes the input signal from the motion sensor by requiring it to stay high for a set number of clock cycles before recognizing it as a valid motion detection. This is achieved through the debounce module, which we’ll define below.
-timer_counter: Counts down to control how long the camera_trigger signal stays high after motion is detected.
-timer_active: Keeps track of whether the timer is active, ensuring that each motion detection event triggers the timer only once.
+Explanation of the Debounce Module
+Counter: Keeps track of consecutive cycles where the input is stable. Only when the input remains high for DEBOUNCE_CYCLES does the output change, effectively removing any brief fluctuations or noise.
 
 
 module debounce #(
