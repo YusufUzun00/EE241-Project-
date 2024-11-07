@@ -108,5 +108,8 @@ module debounce #(
     end
 
 endmodule
-
-
+------------------------------------------------------------------------------------------------------------------------------------------
+How It All Works Together
+Motion Detected: When the debounced motion signal (motion_detected) goes high, it activates the timer.
+Trigger Camera: The camera_trigger output goes high and remains high for the duration of DELAY_CYCLES.
+Timer Countdown: After the specified delay, the camera trigger output is reset to low.
