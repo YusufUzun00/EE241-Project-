@@ -1,0 +1,9 @@
+module MotionCameraTrigger(
+    input wire motion_detected,    // Input from the motion sensor (1 = motion detected, 0 = no motion)
+    output wire camera_trigger     // Output to trigger the camera (1 = trigger camera, 0 = no trigger)
+);
+
+    // Combinational logic to trigger camera when motion is detected
+    assign camera_trigger = motion_detected;
+
+endmodule
