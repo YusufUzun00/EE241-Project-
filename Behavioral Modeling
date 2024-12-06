@@ -1,0 +1,97 @@
+module MotionCameraSystem(
+    input wire clk,                 // System clock
+    input wire reset,               // System reset
+    input wire motion_sensor_in,    // Raw input from motion sensor (1 = motion detected, 0 = no motion)
+    output reg camera_trigger       // Output to trigger the camera (1 = trigger camera, 0 = no trigger)
+);
+
+    // Parameters for timer delay
+    parameter DELAY_CYCLES = 5000000;  // Number of clock cycles to keep the camera triggered (adjust as needed)
+
+    // Internal signals and variables
+    reg motion_detected;  // Debounced motion signal
+    reg [31:0] timer_counter;  // Timer counter for delay
+    reg timer_active;  // Timer active flag
+
+    // Debounce logic (behavioral)
+    always @(posedge clk or posedge reset) begin
+        if (reset) begin
+            motion_detected <= 0;
+        end else if (motion_sensor_in) begin
+            motion_detected <= 1;
+        end else begin
+            motion_detected <= 0;
+        end
+    end
+
+    // Main control logic
+    always @(posedge clk or posedge reset) begin
+        if (reset) begin
+            camera_trigger <= 0;
+            timer_counter <= 0;
+            timer_active <= 0;
+        end else if (motion_detected && !timer_active) begin
+            // Start the timer when motion is detected
+            camera_trigger <= 1;
+            timer_active <= 1;
+            timer_counter <= DELAY_CYCLES;
+        end else if (timer_active) begin
+            // Continue the timer
+            if (timer_counter > 0) begin
+                timer_counter <= timer_counter - 1;
+            end else begin
+                // Timer expired, stop triggering the camera
+                camera_trigger <= 0;
+                timer_active <= 0;
+            end
+        end
+    end
+
+endmodule
+
+
+module debounce #(
+    parameter DEBOUNCE_CYCLES = 100000  // Adjust based on the clock frequency and sensor noise characteristics
+)(
+    input wire clk,             // System clock
+    input wire reset,           // System reset
+    input wire in,              // Raw input signal
+    output reg out              // Debounced output signal
+);
+
+    reg [31:0] counter;         // Counter to track stable cycles
+    reg stable_signal;          // Signal to track stable input
+
+    always @(posedge clk or posedge reset) begin
+        if (reset) begin
+            counter <= 0;
+            stable_signal <= 0;
+            out <= 0;
+        end else begin
+            if (in == stable_signal) begin
+                // If input matches stable signal, reset counter
+                counter <= 0;
+            end else begin
+                // Increment counter if input is not stable
+                counter <= counter + 1;
+                if (counter >= DEBOUNCE_CYCLES) begin
+                    // If counter exceeds threshold, update stable signal
+                    stable_signal <= in;
+                    out <= in;
+                    counter <= 0;
+                end
+            end
+        end
+    end
+
+endmodule
+
+How It Works in Behavioral Modeling
+Debounce Module:
+The debounce module stabilizes the noisy motion sensor signal using a counter that tracks the number of consecutive cycles the input stays stable.
+Once the input is stable for DEBOUNCE_CYCLES, the output updates.
+MotionCameraSystem Module:
+Detects motion using the debounced signal.
+Starts a timer (timer_counter) when motion is detected and keeps the camera_trigger high for DELAY_CYCLES.
+Once the timer expires, camera_trigger is reset, and the system waits for the next motion detection event.
+
