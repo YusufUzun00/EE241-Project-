@@ -1,0 +1,103 @@
+module MotionCameraSystemWithDebounce(
+    input wire clk,                 
+    input wire reset,               
+    input wire motion_sensor_in,    
+    output wire camera_trigger      
+);
+
+    parameter DEBOUNCE_CYCLES = 100000;  
+    parameter DELAY_CYCLES = 5000000;    
+
+    
+    wire motion_detected;           
+    reg [31:0] timer_counter;       
+    reg timer_active;               
+    reg camera_trigger_reg;        
+
+   
+    assign camera_trigger = camera_trigger_reg;
+
+   
+    debounce #(
+        .DEBOUNCE_CYCLES(DEBOUNCE_CYCLES)
+    ) debounce_inst (
+        .clk(clk),
+        .reset(reset),
+        .in(motion_sensor_in),
+        .out(motion_detected)
+    );
+
+    
+    always @(posedge clk or posedge reset) begin
+        if (reset) begin
+            camera_trigger_reg <= 0;
+            timer_counter <= 0;
+            timer_active <= 0;
+        end else if (motion_detected && !timer_active) begin
+            
+            camera_trigger_reg <= 1;
+            timer_active <= 1;
+            timer_counter <= DELAY_CYCLES;
+        end else if (timer_active) begin
+            
+            if (timer_counter > 0) begin
+                timer_counter <= timer_counter - 1;
+            end else begin
+                
+                camera_trigger_reg <= 0;
+                timer_active <= 0;
+            end
+        end
+    end
+
+endmodule
+
+
+module debounce #(
+    parameter DEBOUNCE_CYCLES = 100000  
+)(
+    input wire clk,            
+    input wire reset,          
+    input wire in,             
+    output reg out              
+);
+
+    reg [31:0] counter;         
+    reg stable_signal;          
+
+    always @(posedge clk or posedge reset) begin
+        if (reset) begin
+            counter <= 0;
+            stable_signal <= 0;
+            out <= 0;
+        end else begin
+            if (in == stable_signal) begin
+                
+                counter <= 0;
+            end else begin
+                
+                counter <= counter + 1;
+                if (counter >= DEBOUNCE_CYCLES) begin
+                   
+                    stable_signal <= in;
+                    out <= in;
+                    counter <= 0;
+                end
+            end
+        end
+    end
+
+endmodule
+
+How It All Works Together:
+1. Input Signal Debouncing
+The raw input signal from the motion sensor (motion_sensor_in) may contain noise due to environmental factors or sensor characteristics. The debounce module stabilizes this signal by monitoring its state over multiple clock cycles. If the signal remains stable (unchanged) for a predefined number of cycles (DEBOUNCE_CYCLES), it is considered debounced and is passed as the motion_detected signal to the main system.
+
+2. Motion Detection and Trigger Activation
+The motion_detected signal is monitored by the Motion Camera System logic. When motion is detected (i.e., motion_detected goes high) and the system is not already timing an event (timer_active is low), the camera is triggered by setting the camera_trigger signal to high. At the same time, a countdown timer is initialized to maintain the trigger for a specified duration (DELAY_CYCLES).
+
+3. Timer Countdown and Trigger Reset
+Once the timer is activated, it begins counting down from the specified DELAY_CYCLES value. As long as the timer is running, the camera_trigger signal remains high. When the countdown reaches zero, the system resets the trigger signal (camera_trigger goes low), and the timer is deactivated (timer_active is set to 0), making the system ready for the next motion detection event.
+
+4. Integration of Debounce and Motion Camera System
+The debounce module ensures that the motion detection system works with a clean and stable signal, eliminating false triggers. The combined design effectively detects motion and triggers the camera for a defined duration, ensuring reliable operation in environments prone to sensor noise or instability.
